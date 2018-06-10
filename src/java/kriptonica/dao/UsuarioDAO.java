@@ -6,7 +6,9 @@
 package kriptonica.dao;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import kriptonica.models.Usuario;
+import kriptonica.utils.BCrypt;
 
 /**
  *
@@ -25,7 +27,7 @@ public class UsuarioDAO {
             em.persist(p);
         } else {
             if (!em.contains(p)) {
-                if (em.find(Usuario.class, p.getId()) == null) {
+                if (em.find(Usuario.class, p.getId()) == null || buscaUsuarioPorEmail(p.getEmail()) != null) {
                     throw new Exception("Erro ao atualizar os dados da Pessoa!");
                 }
             }
@@ -41,6 +43,20 @@ public class UsuarioDAO {
     public void remover(Long id) {
         Usuario p = consultarPorId(id);
         em.remove(p);
+    }
+
+    public Usuario buscaUsuarioPorEmail(String email) {
+        String jpql = "select u from Usuario u where u.email = :email";
+
+        try {
+            return this.em
+                    .createQuery(jpql, Usuario.class)
+                    .setParameter("email", email)
+                    .getSingleResult();
+
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
 }

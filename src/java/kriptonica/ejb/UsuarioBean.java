@@ -17,7 +17,7 @@ import kriptonica.models.Usuario;
  */
 @Stateless
 public class UsuarioBean implements UsuarioRemote {
-    
+
     @PersistenceContext(unitName = "KriptonicaEJBPU")
     EntityManager em;
 
@@ -31,7 +31,7 @@ public class UsuarioBean implements UsuarioRemote {
     public Usuario consultarPorID(Long id) {
         UsuarioDAO dao = new UsuarioDAO(em);
         return dao.consultarPorId(id);
-        
+
     }
 
     @Override
@@ -39,5 +39,11 @@ public class UsuarioBean implements UsuarioRemote {
         UsuarioDAO dao = new UsuarioDAO(em);
         dao.remover(id);
     }
-    
+
+    @Override
+    public Usuario buscaUsuarioPorEmail(String email) {
+        UsuarioDAO dao = new UsuarioDAO(em);
+        return dao.buscaUsuarioPorEmail(email);
+    }
+
 }

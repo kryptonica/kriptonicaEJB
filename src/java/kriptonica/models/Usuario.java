@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.Temporal;
 import kriptonica.utils.BCrypt;
 
@@ -20,6 +21,7 @@ import kriptonica.utils.BCrypt;
  *
  * @author Mathe
  */
+@NamedQuery(name = "Usuario.buscarPorEmail", query = "select u from Usuario u where u.email like :email")
 @Entity
 public class Usuario implements Serializable {
 
@@ -37,15 +39,33 @@ public class Usuario implements Serializable {
     private Date nascimento;
     @Column(nullable = false)
     private String senha;
+    private String sobre;
 
     public Usuario() {
     }
-
+    
     public Usuario(String nome, Date nascimento, String email, String senha) {
         this.nome = nome;
         this.email = email;
         this.nascimento = nascimento;
         this.senha = BCrypt.hashpw(senha, BCrypt.gensalt());
+        this.sobre = "";
+    }
+
+    public Usuario(String nome, Date nascimento, String email, String senha, String sobre) {
+        this.nome = nome;
+        this.email = email;
+        this.nascimento = nascimento;
+        this.senha = BCrypt.hashpw(senha, BCrypt.gensalt());
+        this.sobre = sobre;
+    }
+
+    public String getSobre() {
+        return sobre;
+    }
+
+    public void setSobre(String sobre) {
+        this.sobre = sobre;
     }
 
     public String getNome() {
@@ -94,4 +114,7 @@ public class Usuario implements Serializable {
         this.id = id;
     }
 
+    public boolean autenticar(String senha) {
+        return (BCrypt.checkpw(senha, this.senha));
+    }
 }

@@ -20,4 +20,6 @@ public interface UsuarioRemote {
     public Usuario consultarPorID(Long id);
 
     public void remover(Long id);
+
+    public Usuario buscaUsuarioPorEmail(String email);
 }
